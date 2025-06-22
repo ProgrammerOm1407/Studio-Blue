@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Interior Gallery - Studio Blue</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            z-index: -1;
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: titleSlide 1s ease-out;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes titleSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Gallery Container */
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        /* Photo Card Styles */
+        .photo-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .photo-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .photo-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-card:hover .photo-overlay {
+            opacity: 1;
+        }
+
+        .overlay-content {
+            text-align: center;
+            color: white;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-card:hover .overlay-content {
+            transform: translateY(0);
+        }
+
+        .photo-info {
+            padding: 1.5rem;
+        }
+
+        .photo-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .photo-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .photo-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        /* Animation Classes */
+        .animate-item {
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .animate-item.visible {
+            opacity: 1;
+        }
+
+        /* Fade In */
+        .fade-in {
+            opacity: 0;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+        }
+
+        /* Slide In Left */
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Slide In Right */
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Slide In Up */
+        .slide-in-up {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .slide-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Slide In Down */
+        .slide-in-down {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+
+        .slide-in-down.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Scale Up */
+        .scale-up {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .scale-up.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Scale Down */
+        .scale-down {
+            opacity: 0;
+            transform: scale(1.2);
+        }
+
+        .scale-down.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Rotate In */
+        .rotate-in {
+            opacity: 0;
+            transform: rotate(-10deg) scale(0.8);
+        }
+
+        .rotate-in.visible {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        /* Flip In X */
+        .flip-in-x {
+            opacity: 0;
+            transform: perspective(400px) rotateX(90deg);
+        }
+
+        .flip-in-x.visible {
+            opacity: 1;
+            transform: perspective(400px) rotateX(0deg);
+        }
+
+        /* Flip In Y */
+        .flip-in-y {
+            opacity: 0;
+            transform: perspective(400px) rotateY(90deg);
+        }
+
+        .flip-in-y.visible {
+            opacity: 1;
+            transform: perspective(400px) rotateY(0deg);
+        }
+
+        /* Bounce In */
+        .bounce-in {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+
+        .bounce-in.visible {
+            opacity: 1;
+            transform: scale(1);
+            animation: bounceIn 0.8s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Zoom In */
+        .zoom-in {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .zoom-in.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Slide Rotate */
+        .slide-rotate {
+            opacity: 0;
+            transform: translateX(-100px) rotate(-5deg);
+        }
+
+        .slide-rotate.visible {
+            opacity: 1;
+            transform: translateX(0) rotate(0deg);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            margin-top: 4rem;
+        }
+
+        .footer p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            margin: 2rem 0;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .header {
+                padding: 3rem 1rem;
+            }
+
+            .gallery-container {
+                padding: 2rem 1rem;
+            }
+
+            .photo-card img {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .photo-info {
+                padding: 1rem;
+            }
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+
+        /* Gallery Hero Section */
+        .gallery-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            margin-top: 80px; /* Account for fixed header */
+        }
+
+        .gallery-hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            animation: titleSlide 1s ease-out;
+        }
+
+        .gallery-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            padding: 4rem 0;
+        }
+
+        /* Override body background for gallery page */
+        body {
+            background: #f8f9fa;
+        }
+
+        /* Animation Delay Classes */
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+        .delay-5 { transition-delay: 0.5s; }
+        .delay-6 { transition-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <!-- Header (same as main page) -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <div class="logo-text">
+                    <span>STUDIO</span>
+                    <small>BLUE</small>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="photo-gallery.html" class="active">Interior Gallery</a></li>
+                <li><a href="index.html#partners">Brand Partners</a></li>
+                <li><a href="index.html#team">Team</a></li>
+                <li><a href="index.html#faq">FAQ</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Gallery Hero Section -->
+        <section class="gallery-hero">
+            <div class="container">
+                <h1>Interior Gallery</h1>
+                <p>Experience our stunning interior design projects and craftsmanship</p>
+            </div>
+        </section>
+
+        <!-- Scroll Progress Bar -->
+        <div class="scroll-progress" id="scrollProgress"></div>
+
+        <!-- Gallery Section -->
+        <section class="gallery-section">
+            <div class="gallery-container">
+                <div class="gallery-grid" id="gallery">
+                    <!-- Photos will be dynamically loaded here -->
+                </div>
+
+                <!-- Loading Indicator -->
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer (same as main page) -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">
+                        <div class="logo-text">
+                            <span>STUDIO</span>
+                            <small>BLUE</small>
+                        </div>
+                    </div>
+                    <p>Powering global architecture, interior design, and artisan craftsmanship ecosystem — from concept to completion with premium quality.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram">📷</a>
+                        <a href="#" aria-label="LinkedIn">💼</a>
+                        <a href="#" aria-label="Facebook">📘</a>
+                        <a href="#" aria-label="Twitter">🐦</a>
+                    </div>
+                </div>
+                <div class="footer-services">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="index.html#services">Architecture & Planning</a></li>
+                        <li><a href="index.html#services">Interior Design</a></li>
+                        <li><a href="index.html#services">Artisan Craftsmanship</a></li>
+                        <li><a href="index.html#services">Art & Illustration</a></li>
+                        <li><a href="index.html#services">Business Consultation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p>📧 roshnee.studioblue@gmail.com</p>
+                    <p>📧 roshnee@studioblue.co.in</p>
+                    <p>📞 +91 9606307520</p>
+                    <p>📍 Bengaluru, Karnataka</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Studio Blue. All rights reserved.</p>
+                <div class="footer-links">
+                    <!-- <a href="#privacy">Privacy Policy</a>
+                    <a href="#terms">Terms of Service</a> -->
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Photo data with actual gallery images
+        const photoData = [
+            {
+                id: 1,
+                src: "GALLERY/StudioBlue Creatives (1).jpeg",
+                title: "Modern Living Space",
+                description: "Contemporary interior design with premium finishes",
+                category: "Interior Design"
+            },
+            {
+                id: 2,
+                src: "GALLERY/Arna Electronic City (1).jpeg",
+                title: "Arna Electronic City Project",
+                description: "Elegant residential interior with modern aesthetics",
+                category: "Residential"
+            },
+            {
+                id: 3,
+                src: "GALLERY/Full wall tv Unit (1).jpg",
+                title: "Custom TV Unit Design",
+                description: "Bespoke full wall entertainment unit with storage",
+                category: "Commercial"
+            },
+            {
+                id: 4,
+                src: "GALLERY/Sahakarnagar (1).jpeg",
+                title: "Sahakarnagar Residence",
+                description: "Sophisticated residential interior with modern elements",
+                category: "Residential"
+            },
+            {
+                id: 5,
+                src: "GALLERY/Devanhalli (1).jpeg",
+                title: "Devanhalli Project",
+                description: "Contemporary design with functional layouts",
+                category: "Residential"
+            },
+            {
+                id: 6,
+                src: "GALLERY/Peninsula villa (1).jpeg",
+                title: "Peninsula Villa",
+                description: "Luxury villa interior with premium finishes",
+                category: "Luxury"
+            },
+            {
+                id: 7,
+                src: "GALLERY/StudioBlue Creatives (5).jpeg",
+                title: "Creative Workspace",
+                description: "Modern office design with artistic elements",
+                category: "Commercial"
+            },
+            {
+                id: 8,
+                src: "GALLERY/Full wall tv Unit (3).jpg",
+                title: "Entertainment Wall",
+                description: "Comprehensive entertainment wall with storage solutions",
+                category: "Commercial"
+            },
+            {
+                id: 9,
+                src: "GALLERY/Arna Electronic City (5).jpeg",
+                title: "Arna Living Area",
+                description: "Open concept living space with modern aesthetics",
+                category: "Residential"
+            },
+            {
+                id: 10,
+                src: "GALLERY/StudioBlue Creatives (10).jpeg",
+                title: "Design Studio",
+                description: "Creative workspace showcasing innovative design",
+                category: "Commercial"
+            },
+            {
+                id: 11,
+                src: "GALLERY/Sahakarnagar (5).jpeg",
+                title: "Sahakarnagar Kitchen",
+                description: "Modern kitchen design with functional layouts",
+                category: "Residential"
+            },
+            {
+                id: 12,
+                src: "GALLERY/StudioBlue Creatives (15).jpeg",
+                title: "Artistic Interior",
+                description: "Interior design with artistic elements and premium finishes",
+                category: "Interior Design"
+            }
+        ];
+
+        // Animation types array
+        const animationTypes = [
+            'fade-in',
+            'slide-in-left',
+            'slide-in-right',
+            'slide-in-up',
+            'slide-in-down',
+            'scale-up',
+            'scale-down',
+            'rotate-in',
+            'flip-in-x',
+            'flip-in-y',
+            'bounce-in',
+            'zoom-in',
+            'slide-rotate'
+        ];
+
+        // Initialize gallery
+        function initGallery() {
+            const gallery = document.getElementById('gallery');
+            const loading = document.getElementById('loading');
+
+            // Simulate loading delay
+            setTimeout(() => {
+                photoData.forEach((photo, index) => {
+                    const photoCard = createPhotoCard(photo, index);
+                    gallery.appendChild(photoCard);
+                });
+
+                loading.style.display = 'none';
+                initScrollAnimations();
+            }, 1000);
+        }
+
+        // Create photo card element
+        function createPhotoCard(photo, index) {
+            const card = document.createElement('div');
+            const animationType = animationTypes[index % animationTypes.length];
+            const delayClass = `delay-${(index % 6) + 1}`;
+
+            card.className = `photo-card animate-item ${animationType} ${delayClass}`;
+            card.innerHTML = `
+                <div class="photo-wrapper">
+                    <img src="${photo.src}" alt="${photo.title}" loading="lazy">
+                    <div class="photo-overlay">
+                        <div class="overlay-content">
+                            <h3>${photo.title}</h3>
+                            <p>Click to view details</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="photo-info">
+                    <div class="photo-category">${photo.category}</div>
+                    <h3 class="photo-title">${photo.title}</h3>
+                    <p class="photo-description">${photo.description}</p>
+                </div>
+            `;
+
+            // Add click event for photo interaction
+            card.addEventListener('click', () => {
+                showPhotoDetails(photo);
+            });
+
+            return card;
+        }
+
+        // Initialize scroll animations
+        function initScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all animate items
+            document.querySelectorAll('.animate-item').forEach(item => {
+                observer.observe(item);
+            });
+        }
+
+        // Show photo details (simple alert for demo)
+        function showPhotoDetails(photo) {
+            alert(`${photo.title}\n\nCategory: ${photo.category}\n\n${photo.description}`);
+        }
+
+        // Scroll progress bar
+        function updateScrollProgress() {
+            const scrollProgress = document.getElementById('scrollProgress');
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercentage = (scrollTop / scrollHeight) * 100;
+            
+            scrollProgress.style.width = scrollPercentage + '%';
+        }
+
+        // Smooth scroll behavior
+        function initSmoothScroll() {
+            document.documentElement.style.scrollBehavior = 'smooth';
+        }
+
+        // Parallax effect for header
+        function initParallaxEffect() {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const header = document.querySelector('.header');
+                const rate = scrolled * -0.5;
+                
+                if (header) {
+                    header.style.transform = `translateY(${rate}px)`;
+                }
+                
+                updateScrollProgress();
+            });
+        }
+
+        // Add keyboard navigation
+        function initKeyboardNavigation() {
+            document.addEventListener('keydown', (e) => {
+                const cards = document.querySelectorAll('.photo-card');
+                let currentIndex = Array.from(cards).findIndex(card => 
+                    card.classList.contains('focused')
+                );
+
+                switch(e.key) {
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        navigateCards(cards, currentIndex, 1);
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        navigateCards(cards, currentIndex, -1);
+                        break;
+                    case 'Enter':
+                        if (currentIndex >= 0) {
+                            cards[currentIndex].click();
+                        }
+                        break;
+                }
+            });
+        }
+
+        // Navigate between cards with keyboard
+        function navigateCards(cards, currentIndex, direction) {
+            if (cards.length === 0) return;
+
+            // Remove current focus
+            if (currentIndex >= 0) {
+                cards[currentIndex].classList.remove('focused');
+            }
+
+            // Calculate new index
+            let newIndex = currentIndex + direction;
+            if (newIndex < 0) newIndex = cards.length - 1;
+            if (newIndex >= cards.length) newIndex = 0;
+
+            // Add focus to new card
+            cards[newIndex].classList.add('focused');
+            cards[newIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Add focus styles for keyboard navigation
+        function addFocusStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .photo-card.focused {
+                    outline: 3px solid #667eea;
+                    outline-offset: 4px;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initGallery();
+            initSmoothScroll();
+            initParallaxEffect();
+            initKeyboardNavigation();
+            addFocusStyles();
+        });
+
+        // Handle window resize for responsive behavior
+        window.addEventListener('resize', () => {
+            // Recalculate any size-dependent animations if needed
+            updateScrollProgress();
+        });
+
+        // Add touch support for mobile devices
+        function initTouchSupport() {
+            let startY = 0;
+            let startX = 0;
+
+            document.addEventListener('touchstart', (e) => {
+                startY = e.touches[0].clientY;
+                startX = e.touches[0].clientX;
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!startY || !startX) return;
+
+                const currentY = e.touches[0].clientY;
+                const currentX = e.touches[0].clientX;
+                const diffY = startY - currentY;
+                const diffX = startX - currentX;
+
+                // Add any touch-specific animations here
+                updateScrollProgress();
+            });
+        }
+
+        // Initialize touch support
+        document.addEventListener('DOMContentLoaded', initTouchSupport);
+
+        // Performance optimization: Throttle scroll events
+        function throttle(func, limit) {
+            let inThrottle;
+            return function() {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            }
+        }
+
+        // Apply throttling to scroll events
+        window.addEventListener('scroll', throttle(() => {
+            updateScrollProgress();
+        }, 16)); // ~60fps
+    </script>
+</body>
+</html>
